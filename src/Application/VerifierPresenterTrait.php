@@ -7,6 +7,7 @@ namespace Arachne\Verifier\Application;
 use Arachne\Verifier\Exception\NotSupportedException;
 use Arachne\Verifier\Verifier;
 use Nette\Application\BadRequestException;
+use Nette\Application\Request;
 use ReflectionClass;
 use ReflectionMethod;
 
@@ -16,11 +17,6 @@ use ReflectionMethod;
 trait VerifierPresenterTrait
 {
     use VerifierControlTrait;
-
-    /**
-     * @var callable[]
-     */
-    public $onStartup;
 
     /**
      * @var Verifier
@@ -39,11 +35,13 @@ trait VerifierPresenterTrait
     {
         $rules = $this->verifier->getRules($reflection);
 
-        if ($rules && $reflection instanceof ReflectionMethod && substr($reflection->getName(), 0, 6) === 'render') {
+        if ($rules !== [] && $reflection instanceof ReflectionMethod && substr($reflection->getName(), 0, 6) === 'render') {
             throw new NotSupportedException('Rules for render methods are not supported. Define the rules for action method instead.');
         }
 
-        $this->verifier->checkRules($rules, $this->getRequest());
+        /** @var Request $request */
+        $request = $this->getRequest();
+        $this->verifier->checkRules($rules, $request);
     }
 
     public function getVerifier(): Verifier
@@ -73,14 +71,5 @@ trait VerifierPresenterTrait
     public function delegateCreateRequest($component, $destination, array $parameters, $mode)
     {
         return parent::createRequest($component, $destination, $parameters, $mode);
-    }
-
-    /**
-     * Calls onStartup event which is used to verify presenter properties.
-     */
-    public function startup()
-    {
-        parent::startup();
-        $this->onStartup();
     }
 }

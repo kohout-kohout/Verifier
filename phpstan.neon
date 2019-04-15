@@ -1,14 +1,19 @@
 includes:
     - vendor/phpstan/phpstan-nette/extension.neon
     - vendor/phpstan/phpstan-nette/rules.neon
+    - vendor/phpstan/phpstan-strict-rules/rules.neon
     - vendor/eloquent/phpstan-phony/phony.neon
-    - vendor/arachne/codeception/extension.neon
+    - vendor/contributte/codeception/extension.neon
 
 parameters:
     excludes_analyse:
         - %rootDir%/../../../tests/_*
 
     ignoreErrors:
-        - '#^Call to an undefined method Nette\\Application\\UI\\Presenter::getVerifier\(\)#'
-        - '#^Call to protected method createRequest\(\) of class Nette\\Application\\UI\\Presenter#'
-        - '#^Calling method [a-zA-Z]++\(\) on possibly null value of type Nette\\Application\\UI\\Presenter\|null#'
+        - '~^Call to an undefined method Nette\\Application\\UI\\Presenter::getVerifier\(\)~'
+        - '~^Call to protected method createRequest\(\) of class Nette\\Application\\UI\\Presenter~'
+        - '~^Method Tests\\Functional\\Classes\\ArticlePresenter::~'
+        - '~^Parameter #2 \$destination of method Tests\\Functional\\Classes\\ArticlePresenter::~'
+        - '~^Return type \(mixed\) of method Tests\\Functional\\Classes\\ArticlePresenter::createRequest\(\) should be covariant with return type \(string\|null\) of method Nette\\Application\\UI\\Presenter::createRequest\(\)~'
+        - '~Parameter #1 \$reflection \(ReflectionClass\|ReflectionMethod\) of method Tests\\Functional\\Classes\\[a-zA-Z]++::checkRequirements\(\) should be contravariant with parameter \$element \(mixed\) of method Nette\\Application\\UI\\(?:Component|Presenter)::checkRequirements\(\)~'
+        - '~Parameter #1 \$component \(Nette\\ComponentModel\\IComponent\) of method Tests\\Functional\\Classes\\[a-zA-Z]++::attached\(\) should be contravariant with parameter \$presenter \(mixed\) of method Nette\\Application\\UI\\Component::attached\(\)~'
