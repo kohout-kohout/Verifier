@@ -46,7 +46,7 @@ trait VerifierControlTrait
         }
 
         $presenter = $this->getPresenter();
-        $link = $presenter->createRequest($this, $destination, $parameters, 'redirect');
+        $link = $presenter->delegateCreateRequest($this, $destination, $parameters, 'redirect');
         if ($presenter->getVerifier()->isLinkVerified($presenter->getLastCreatedRequest(), $this)) {
             $presenter->redirectUrl($link, $code);
         }
